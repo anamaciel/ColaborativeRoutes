@@ -1,0 +1,51 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui">
+    <h:form id="formTutorial" prependId="false">
+        <p:growl id="messages" showDetail="true" globalOnly="true" life="3000"/>
+        <h1 class="tituloForm"><h:outputText value="Registrando ocorrências"/></h1>
+        <p:panel>
+            <h3 class="dica1 ui-corner-all">
+                Esta página exibe um rápido tutorial mostrando os passos que devem ser seguidos para registrar novas ocorrências na aplicação.
+            </h3><br/>
+            <p>Para realizar o registro de novas ocorrências é necessário que o usuário tenha efetuado login na aplicação.</p>
+            <p>
+                Para efetuar login o usuário deve possuir um cadastro que pode ser realizado acessando a opção <strong>criar uma conta</strong>
+                no menu principal.<br/><img src="#{request.contextPath}/resources/images/tutorial/menuCriarConta.png" alt="menu criar nova conta" title="Menu criar nova conta"/>
+            </p><br/>
+            <p>
+                Após ter realizado o cadastro basta informar o <strong>login</strong> e a <strong>senha</strong> no formulario de login disponível na parte
+                superior esquerda da página principal da aplicação.<br/>
+                <img src="#{request.contextPath}/resources/images/tutorial/formLogin.png" alt="Formulário de login" title="Formulário de login"/>
+            </p><br/>
+            <p>Depois de ter efetuado o login na aplicação o usuário está habilitado à registrar novas ocorrências.</p>
+            <p>
+                Para registrar ocorências é utilizado o mapa disponível na página principal, bastando clicar com o mouse sobre o ponto do mapa 
+                referente a locolização da ocorrência que se deseja cadastrar.
+            </p>
+            <p class="dica2 ui-corner-all">DICA: Para melhorar a precisão da localização deve-se aumentar o zoom do mapa. Quanto maior o zoom mais precisa é a localização.</p>
+            <p>
+                <img src="#{request.contextPath}/resources/images/tutorial/zoom-1.png" alt="img zoom 1" title="Imagem com pouco zoom, precisão baixa"/>                    
+                <img src="#{request.contextPath}/resources/images/tutorial/zoom-2.png" alt="img zoom 2" title="Imagem com zoom médio, precisão aumenta"/>
+                <img src="#{request.contextPath}/resources/images/tutorial/zoom-3.png" alt="img zoom 3" title="Imagem com zoom alto, precisão da localização muito alta, podendo ser localizado um ponto específico no mapa"/>
+            </p>
+            <p>
+                Ao clicar no mapa uma caixa de diálogo será exibida. Nela estão presentes os campos que devem ser preenchidos com os dados da ocorrência.<br/>
+                <img src="#{request.contextPath}/resources/images/tutorial/dialogCadastroOcorrencia.png" alt="Caixa de diálogo cadastro de ocorrências" title="Caixa de diálogo cadastro de ocorrências"/>
+            </p><br/>
+            <p>
+                Depois de preenchidos os dados basta clicar no botão 
+                <img src="#{request.contextPath}/resources/images/tutorial/botaoAdicionar.png" alt="Botão adicionar" style="vertical-align: middle;" title="Botão adicionar ocorrência"/>
+            </p>
+            <p>Feito isto a caixa de diálogo irá desaparecer e um marcador aprecerá no mapa no local exato onde foi adicionada a ocorrência.</p>
+            <p>
+                Agora os dados desta ocorrência já podem ser visualizados por qualquer usuário, bastando clicar sbre o marcador, como mostra a figura abaixo.<br/>
+                <img src="#{request.contextPath}/resources/images/tutorial/visualizacao.png" alt="Visualização dos dados da ocorrência" title="Visualização da ocorrência"/>
+            </p>
+            <p>Lembrando que apenas as ocorrências que ainda não foram resolvidas são exibidas no mapa.</p>
+        </p:panel>
+    </h:form>
+
+</div>

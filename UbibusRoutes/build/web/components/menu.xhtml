@@ -1,0 +1,23 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:shiro="http://shiro.apache.org/tags"
+     id="leftMenu">
+
+    <h:form id="menu">
+        <p:menu style="width: 190px; margin: 2px auto;">
+
+            <p:menuitem id="menuHome" icon="ui-icon ui-icon-home" value="Home" action="#{pageManager.setMapAddRotas()}" ajax="false" title="Ir para a página inicial (mapa)"/>
+
+            <shiro:notAuthenticated>
+                <p:menuitem id="menuCreateAccount" icon="ui-icon ui-icon-contact" value="Criar uma conta" action="#{pageManager.setCadastroUsuario()}"
+                            ajax="false" title="Criar uma nova conta de usuário"/>
+            </shiro:notAuthenticated>
+
+            <p:menuitem id="menuTutorial" icon="ui-icon ui-icon-document" value="Como registrar ocorrências?" action="#{pageManager.setTutorial()}"
+                        ajax="false" title="Exibe um tutorial ensinando como registrar ocorrências"/>
+
+        </p:menu>
+    </h:form>
+</div>

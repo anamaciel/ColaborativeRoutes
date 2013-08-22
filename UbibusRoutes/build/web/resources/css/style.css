@@ -1,0 +1,115 @@
+/* 
+    Document   : style
+    Created on : 04/09/2011, 17:47:43
+    Author     : Marcelo F. Vasconcelos
+    Description:
+        Purpose of the stylesheet follows.
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+#logo {
+    margin-left: 10px;
+    width: 120px;
+    height: 60px;
+    background: #d4d4d4 url("../images/logo-ubibus.jpg") no-repeat;
+}
+.panel_infoWin {
+    text-align:center;
+    display:block;
+    margin:auto;
+    line-height: 110%;
+}
+.infoWinL{
+    text-align: right;
+    font-weight: bolder;
+    color: #414141;
+}
+.infoWinR{
+    text-align: left;
+    margin-left: 5px;
+    width: 350px;
+}
+
+.occurrenceDlgL{
+    text-align: right;
+}
+.occurrenceDlgR{
+    text-align: left;
+    margin-left: 5px;
+}
+.tituloForm{
+    padding: 3px 0 5px 0;
+    font-size: 16px;
+    letter-spacing: 1.2px;
+    text-transform: capitalize;
+    font-weight: bolder;
+}
+.col{text-align: right;}
+.breakRow{margin-bottom: 20px;}
+.dica1{
+    color: #212121;
+    background-color: #f5f373;
+    letter-spacing: 1px;
+    padding: 5px;
+}
+.dica2{
+    color: #212121;
+    background-color: palegoldenrod;
+    margin-top: 3px;
+    padding: 2px;
+}
+#formTutorial p{
+    font-size: 10pt;
+}
+#formTutorial img{
+    margin: 4px 0;
+}
+.ui-menu, .ui-menu .ui-menu-child {
+    background:#c4c4c4 url("../images/ui-bg_highlight-hard_80_c4c4c4_1x100.png") top repeat-x;
+    background:#c4c4c4 linear-gradient(top, rgba(255,255,255,0.8), rgba(255,255,255,0));
+    background:#c4c4c4 -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.8)), to(rgba(255,255,255,0)));
+    background:#c4c4c4 -moz-linear-gradient(top, rgba(255,255,255,0.8), rgba(255,255,255,0));
+}
+#dynaButton {
+    font-weight: bold;
+    position:relative;
+    padding-left: 2px;
+}
+#dynaButton.ui-icon{
+    width: 21px;
+    height: 21px;
+    border-radius: 0;
+}
+#dynaButton:hover{
+    /*    opacity:0.85;
+        filter:alpha(opacity=85);*/
+    border-bottom: black inset 1px; 
+    border-right: black inset 1px;
+    background-color: #f5f5ff;
+
+}
+#groupLogged {
+    vertical-align: middle;
+    height: 22px;
+    line-height: 22px;
+    /*    background-color: #dadada;*/
+    padding-left: 190px;
+}
+/*alterando propriedade do primefaces*/
+#dynaButton.ui-icon-triangle-1-s { background-position: -60px -14px; }
+
+#formDlgOccurrence textArea {
+    max-height: 80px;max-width: 320px;min-width: 270px;
+}
+#page_status{
+    /*    width:32px;height:32px;display:block;position:relative;left:0;top:0; z-index: 20;float: left;*/
+    width:64px;height:64px;position:fixed;right:5px;bottom:5px;
+}
+
+#btRotas{
+    float: right;
+    margin-top: 13px;
+}
+
+#listaRotas{
+    display: block;
+}

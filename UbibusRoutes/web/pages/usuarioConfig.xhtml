@@ -1,0 +1,90 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="formConfig" prependId="false">
+        <p:growl id="messages" showDetail="true" globalOnly="true" life="6000"/>
+        <h3 class="tituloForm"><h:outputText value="Configurações da conta"/></h3>
+        <p:panel>
+            <h:panelGrid columns="2" cellpadding="5" columnClasses="col" rowClasses="breakRow">
+
+                <h:outputLabel for="login" value="Login:"/>
+                <p:inputText value="#{usuarioBean.usuario.login}" id="login" size="45" styleClass="_inputfield" disabled="true"/>
+
+                <h:outputLabel for="nome" value="Data ingresso:"/>
+                <p:inputText value="#{usuarioBean.usuario.dataIngresso}" size="45" styleClass="_inputfield" disabled="true">
+                    <f:convertDateTime pattern="dd-MM-yyyy" locale="#{preferencesBean.locale}"/>
+                </p:inputText>
+
+                <h:outputLabel for="nome" value="Último acesso:"/>
+                <p:inputText value="#{usuarioBean.usuario.dataUltimoAcesso}" size="45" styleClass="_inputfield" disabled="true">
+                    <f:convertDateTime pattern="EEE, dd MMM, yyyy" locale="#{preferencesBean.locale}"/>
+                </p:inputText>
+
+                <h:outputLabel for="nome" value="Nome:"><span class="required">*</span></h:outputLabel>
+                <h:panelGrid columns="2">
+                    <p:inputText value="#{usuarioBean.usuario.nome}" id="nome" maxlength="45" styleClass="_inputfield"
+                                 title="Nome do usuário" required="true" requiredMessage="Campo obrigatório"
+                                 size="45"/>
+                    <p:message for="nome"/>
+                </h:panelGrid>
+
+                <h:outputLabel for="email" value="Email:"><span class="required">*</span></h:outputLabel>
+                <h:panelGrid columns="2">
+                    <p:inputText value="#{usuarioBean.usuario.email}" id="email" maxlength="45" styleClass="_inputfield"
+                                 title="Email do usuário" required="true" requiredMessage="Campo obrigatório" size="45"
+                                 validatorMessage="Email inválido!">
+                        <f:validateRegex pattern="^([\w\-]+\.)*[\w\- ]+@([\w\- ]+\.)+([\w\-]{2,3})$"/>
+                    </p:inputText>
+                    <p:message for="email"/>
+                </h:panelGrid>
+            </h:panelGrid>
+
+            <!-- painel senha -->
+            <h:panelGroup id="groupSenha">
+                <h:panelGrid id="pgSenha2" columns="2" cellpadding="5" columnClasses="col" rowClasses="breakRow" rendered="#{usuarioBean.senhaEditavel}">                    
+                    <h:outputLabel for="senhaAtual" value="Senha atual:"><span class="required">*</span></h:outputLabel>
+                    <h:panelGrid columns="2">
+                        <p:password id="senhaAtual" value="#{usuarioBean.senhaAtual}" title="Digite a senha atual" maxlength="20"
+                                    feedback="false" required="true" requiredMessage="Digite sua senha atual"/>
+                        <p:message for="senhaAtual"/>
+                    </h:panelGrid>
+
+                    <h:outputLabel for="novaSenha" value="Nova Senha:"><span class="required">*</span></h:outputLabel>
+                    <h:panelGrid columns="2">
+                        <p:password id="novaSenha" value="#{usuarioBean.novaSenha}" promptLabel="Digite a nova senha. A senha deve ter entre 6 e 20 caracteres"
+                                    goodLabel="Média" strongLabel="Forte"  weakLabel="Fraca" feedback="true"
+                                    validatorMessage="A senha deve ter entre 6 e 20 caracteres" maxlength="20"
+                                    required="true" requiredMessage="Informe a nova senha">
+                            <f:validateRegex pattern="^.{6,20}$"/>
+                        </p:password>
+                        <p:message for="novaSenha"/>
+                    </h:panelGrid>
+
+                    <h:outputLabel for="confirm" value="Confirme a senha:"><span class="required">*</span></h:outputLabel>
+                    <h:panelGrid columns="2">
+                        <p:password id="confirm" value="#{usuarioBean.confirmaSenha}" title="Confirme a nova senha" feedback="false"
+                                    required="true" requiredMessage="Confirme a nova senha"/>
+                        <p:message for="confirm"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+
+                <h:panelGrid columns="3" id="pgSenha1" cellpadding="5" columnClasses="col" rowClasses="breakRow" rendered="#{not usuarioBean.senhaEditavel}">
+                    <h:outputLabel for="senha" value="Senha: "/>
+                    <p:inputText id="senha" value="*******" disabled="true"/>
+                    <p:commandButton actionListener="#{usuarioBean.alterarSenha()}" update="groupSenha" icon="ui-icon-pencil" title="Alterar senha de usuário"/>
+                </h:panelGrid>
+            </h:panelGroup>
+
+            <br/>
+            <p:commandButton value="Salvar" styleClass="saveButton" id="save" ajax="false" title="Salvar alterações"
+                             action="#{usuarioBean.editar}" icon="ui-icon ui-icon-disk" update="messages" style="margin-left: 100px;"/>
+
+            <p:commandButton value="Cancelar" id="cancel" styleClass="cancelButton" update="groupSenha" title="Cancelar edição"
+                             immediate="true" actionListener="#{usuarioBean.cancelarEdicao()}" icon="ui-icon ui-icon-close"
+                             style="margin-left: 80px;"/>
+        </p:panel>
+    </h:form>
+</div>

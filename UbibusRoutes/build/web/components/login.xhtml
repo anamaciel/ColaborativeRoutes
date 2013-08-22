@@ -1,0 +1,29 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:shiro="http://shiro.apache.org/tags"
+     id="leftLogin">
+
+    <shiro:notAuthenticated>
+        <p:panel id="loginPanel" style="border: none; margin: 2px auto;">
+            <h:form id="loginForm">
+
+                <h:outputLabel for="loginUsuario" value="Login:"/><br/>
+                <p:inputText id="loginUsuario" value="#{authenticatorBean.usuario.login}" maxlength="45" size="24"
+                             title="Login do usuário" required="true" requiredMessage="Informe seu login">
+                </p:inputText>
+                <p:message for="loginUsuario"/>
+
+                <h:outputLabel for="senhaUsuario" value="Senha:"/><br/>
+                <p:password id="senhaUsuario" value="#{authenticatorBean.usuario.senha}" maxlength="30" size="24"
+                            feedback="false" title="Senha do usuário" required="true" requiredMessage="Informe sua senha"/>
+                <p:message for="senhaUsuario"/>
+
+                <p:commandButton value="Entrar" id="btnLoginSubmit" action="#{authenticatorBean.login()}"
+                                 style="margin: 5px 30px 5px 15px;" ajax="false" title="Efetuar login"/>
+                <p:commandButton value="Cancelar" id="btnLoginCancel" type="reset" title="Limpa os dados de login"/>
+            </h:form>
+        </p:panel>
+    </shiro:notAuthenticated>
+</div>

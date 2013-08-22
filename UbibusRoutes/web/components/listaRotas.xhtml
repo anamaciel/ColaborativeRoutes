@@ -1,0 +1,71 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:shiro="http://shiro.apache.org/tags">
+    <shiro:authenticated>
+        <h:form id="form" prependId="false">  
+            <p:growl id="growl" showDetail="true" globalOnly="true" life="6000"/>
+            <p:dataTable id="rotas" var="rota" value="#{rotaBean.rotasLista}" paginator="true" rows="5">  
+                <p:column headerText="Rotas" style="width:24%">  
+                    <h:outputText value="#{rota.nome}" />  
+                    <h:inputHidden value="#{rota.id}" />
+                </p:column> 
+                <p:column style="width:4%; text-align: center" headerText="Consultar Rota">  
+                    <p:commandButton id="selectButton" update=":form:display" oncomplete="rotaDialog.show()" icon="ui-icon-search" title="View">  
+                        <f:setPropertyActionListener value="#{rota}" target="#{rotaBean.selectedRota}" />  
+                    </p:commandButton>  
+                </p:column>
+                <p:column style="width:4%; text-align: center" headerText="Excluir Rota">  
+                    <p:commandButton id="selectButton2" update=":form:display" oncomplete="confirmation.show()" icon="ui-icon-close" title="View">  
+                        <f:setPropertyActionListener value="#{rota}" target="#{rotaBean.selectedRota}" />  
+                    </p:commandButton>  
+                </p:column>
+            </p:dataTable>         
+            <p:dialog header="Detalhes da Rota" widgetVar="rotaDialog" resizable="false" id="carDlg"  
+                      showEffect="fade" hideEffect="explode" modal="true">                  
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:3px;">  
+                    <h:inputHidden id="nome" value="#{rotaBean.selectedRota.nome}" />
+                    <h:inputHidden />
+                    <h:outputText value="Rota:" style="padding: 5px;"/>                    
+                    <h:outputText value="#{rotaBean.selectedRota.nome}"  style="font-weight:bold; margin: 5px"/>      
+                    <h:outputText value="Ponto Inicio:" />  
+                    <p:selectOneMenu panelStyle="width:150px" id="inicio" value="#{rotaBean.pontos}" effect="fade" style="width:160px" >  
+                        <f:selectItem itemLabel="Inicio" itemValue="" />  
+                        <f:selectItems value="#{rotaBean.pontos}" var="ponto" itemLabel="#{ponto.nome}" itemValue="#{ponto.latLng}" />  
+                        <p:column>  
+                            #{ponto.nome}
+                        </p:column>  
+                    </p:selectOneMenu> 
+                    <h:outputText value="Pontos" />  
+                    <p:selectManyMenu id="meio" value="#{rotaBean.pontos}" style="width:150px" >  
+                        <f:selectItems value="#{rotaBean.pontos}" var="ponto" itemLabel="#{ponto.nome}" itemValue="#{ponto.latLng}" />  
+                        <p:column>  
+                            #{pontos.nome}
+                        </p:column>  
+                    </p:selectManyMenu> 
+                    <h:outputText value="Ponto Fim:" />  
+                    <p:selectOneMenu value="#{rotaBean.pontos}" panelStyle="width:150px" id="fim" style="width:160px" >  
+                        <f:selectItem itemLabel="Fim" itemValue="" />  
+                        <f:selectItems value="#{rotaBean.pontos}" var="ponto" itemLabel="#{ponto.nome}" itemValue="#{ponto.latLng}" />  
+                        <p:column>  
+                            #{ponto.nome}
+                        </p:column>  
+                    </p:selectOneMenu>
+                </h:panelGrid>  
+                <h:panelGrid id="display1" columns="1" cellpadding="4" style="margin:0 auto;">  
+                    <p:commandButton id="selectButton" actionListener="#{rotaBean.criaSelectedRota}"
+                                     update=":form" oncomplete="calcRoute();" ajax="true" value="Ver no mapa" />  
+                </h:panelGrid>  
+            </p:dialog>  
+            <p:confirmDialog id="confirmDialog" message="Deseja excluir essa rota?"  
+                             header="Excluir Rota" severity="alert" widgetVar="confirmation">  
+                <p:commandButton id="confirm" value="Sim" update="carDlg" oncomplete="confirmation.hide()"  
+                                 actionListener="#{rotaBean.excluirRota()}" ajax="false"/>  
+                <p:commandButton id="decline" value="Não" onclick="confirmation.hide()" type="button" />   
+            </p:confirmDialog>  
+            <div id="directions_panel" style="margin:20px;background-color:#EEE9E9;"></div>
+        </h:form>
+    </shiro:authenticated> 
+</div>

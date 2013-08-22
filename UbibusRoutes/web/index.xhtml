@@ -1,0 +1,35 @@
+<ui:composition template="./templates/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="top">
+        <ui:include src="#{pageManager.topContent}" />
+    </ui:define>
+    
+    
+    <ui:define name="content">
+        <ui:include src="#{pageManager.paginaAtiva}" />
+    </ui:define>
+
+    <ui:define name="bottom">
+        <ui:include src="#{pageManager.bottomContent}" />
+    </ui:define>
+    
+    <ui:define name="rotas">
+        <ui:include src="#{pageManager.listaRotas}" />
+    </ui:define>
+
+    <ui:define name="status">
+        <p:ajaxStatus id="page_status">
+            <f:facet name="start">
+                <p:graphicImage value="/resources/images/loading2.gif" />
+            </f:facet>
+
+            <f:facet name="complete">
+                <h:outputText value="" />
+            </f:facet>
+        </p:ajaxStatus>
+    </ui:define>
+</ui:composition>

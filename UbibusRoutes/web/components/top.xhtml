@@ -1,0 +1,95 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+
+     xmlns:shiro="http://shiro.apache.org/tags"
+     class="top">
+
+    <p:growl id="searchMsg" life="6000" globalOnly="true"/>
+
+    <div style="float: left;margin-right: 20px;z-index: 20;position:relative;">
+        <a href="http://maps.google.com.br" title="Google Maps">
+            <div id="logo"></div>
+        </a>
+    </div>
+    <div id="panel_top">
+        <div id="letreiro">
+            <h1>UBIBUS Rotas</h1>
+        </div>
+
+        <div id="logged">
+            <shiro:authenticated >
+                <h:form id="formLogged" prependId="false">
+                    <p id="groupLogged">
+                        <span>#{userName}</span>
+                        <p:commandLink styleClass="ui-icon ui-icon-triangle-1-s" style="float: right;" id="dynaButton"/>
+                    </p>
+                    <p:menu overlay="true" trigger="dynaButton" my="right top" at="right bottom" style="width: 180px;">
+                        <p:menuitem value="Configurações da Conta" action="#{pageManager.setAlterarConfiguracao()}" ajax="false"
+                                    actionListener="#{usuarioBean.alterarConfiguracao()}" icon="ui-icon ui-icon-pencil"/>
+                        <p:menuitem value="Sair" actionListener="#{authenticatorBean.logout()}" update="@all" icon="ui-icon ui-icon-power"/>
+                    </p:menu>
+                    <div id="btRotas">
+                        <p:commandButton id="modalDialogButton" value="Criar Rota" onclick="dlg2.show();" type="button" icon="ui-icon ui-icon-pencil"/>  
+                        <p:dialog id="modalDialog" header="Criar rota" widgetVar="dlg2" modal="true" width="300" >  
+                            <h:form id="formRota" prependId="false">
+                                <h:panelGrid columns="2">
+                                    <h:outputText value="Nome da Rota: " />  
+                                    <p:inputText value="#{rotaBean.rota.nome}"/>                              
+                                </h:panelGrid>
+                                <h:outputText value="Escolha os pontos de interesses para a rota: " />  
+                                <h:panelGrid columns="5">
+                                    <p:selectManyCheckbox value="#{rotaBean.pontosInteresseSelecionados}" layout="pageDirection">  
+                                        <f:selectItems value="#{rotaBean.pontosInteresses}" var="pontos" itemValue="#{pontos}" itemLabel="#{pontos.nome}"/>  
+                                    </p:selectManyCheckbox> 
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="2">
+
+                                    <p:commandButton value="Salvar" style="margin-left: 60px;" actionListener="#{rotaBean.salvarRota()}"
+                                                     title="Registrar esta ocorrência." id="btnAddRota" ajax="false" />
+
+                                    <p:commandButton value="Cancela" oncomplete="return cancel()" immediate="true" style="margin-left:30px; " actionListener="#{pontosInteressesBean.clearFields()}"
+                                                     title="Cancelar registro da ocorrência." id="btnCancel2"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                    </div>
+                </h:form>
+            </shiro:authenticated>
+            <shiro:notAuthenticated>
+                <h:form id="formLogged" prependId="false">
+                    <h:outputLink id="loginLink" value="javascript:void(0)" onclick="login.show()" title="Login">     
+                        <p:graphicImage value="resources/images/login.png;" alt="login" style="width: 30px; height: 30px; margin-left: 300px;" />  
+                    </h:outputLink>  
+
+                    <p:growl id="growl" showDetail="true" life="3000" />  
+
+                    <p:dialog id="dialog" header="Login" widgetVar="login" resizable="false">  
+
+                        <h:outputLabel for="loginUsuario" value="Login:"/><br/>
+                        <p:inputText id="loginUsuario" value="#{authenticatorBean.usuario.login}" maxlength="45" size="24"
+                                     title="Login do usuário" required="true" requiredMessage="Informe seu login">
+                        </p:inputText>
+                        <p:message for="loginUsuario"/>
+
+                        <h:outputLabel for="senhaUsuario" value="Senha:"/><br/>
+                        <p:password id="senhaUsuario" value="#{authenticatorBean.usuario.senha}" maxlength="30" size="24"
+                                    feedback="false" title="Senha do usuário" required="true" requiredMessage="Informe sua senha"/>
+                        <p:message for="senhaUsuario"/>
+
+                        <p:commandButton value="Entrar" id="btnLoginSubmit" action="#{authenticatorBean.login()}"
+                                         style="margin: 5px 30px 5px 15px;" ajax="false" title="Efetuar login"/>
+                        <p:commandButton value="Cancelar" id="btnLoginCancel" type="reset" title="Limpa os dados de login"/>
+
+                    </p:dialog>
+
+                </h:form>
+            </shiro:notAuthenticated>
+        </div>
+    </div>
+
+
+</div>

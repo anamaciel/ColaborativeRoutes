@@ -1,0 +1,116 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:shiro="http://shiro.apache.org/tags">
+
+
+
+    <h:form id="formMap" prependId="false">
+        <p:growl id="messages" showDetail="true" globalOnly="true" life="6000"/>
+
+        <div id="map-canvas">
+            <p:gmap id="gmap" center="#{pontosInteressesBean.defaultLocation}" zoom="#{pontosInteressesBean.zoom}" type="HYBRID" style="width:955px;height:500px" model="#{pontosInteressesBean.mapModel}"   
+                    widgetVar="map" streetView="true" onPointClick="handlePointClick(event);" fitBounds="false">
+
+                <p:ajax event="overlaySelect" listener="#{pontosInteressesBean.onMarkerSelect}" />
+
+                <p:gmapInfoWindow rendered="#{pontosInteressesBean.markerPontosInteresse}">
+                    <p:outputPanel styleClass="panel_infoWin">                    
+                        <p:dataTable value="#{pontosInteressesBean.paradasProximas}" var="parada" emptyMessage="Nenhuma linha afetada!">
+                            <f:facet name="header"><h:outputText value="Paradas proximas a esse ponto!"/></f:facet>                        
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{parada.id}"/>
+                            </p:column>
+                            <p:column headerText="Descrição">
+                                <h:outputText value="#{parada.nome}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:gmapInfoWindow>            
+
+            </p:gmap>
+        </div>
+    </h:form>
+
+    <shiro:authenticated>
+        <p:dialog widgetVar="dialog" closable="false" position="center" showEffect="fade" hideEffect="explode" id="dlgOccurrence" modal="true"
+                  width="400" draggable="false" resizable="false" header="Cadastro de Ponto de Interesse">
+            <h:form prependId="false" id="formDlgOccurrence">
+                <!--                guarda a localizacao selecionada -->
+                <h:inputHidden id="latitude" value="#{pontosInteressesBean.pontosInteresse.localizacao.firstPoint.y}"/>
+                <h:inputHidden id="longitude" value="#{pontosInteressesBean.pontosInteresse.localizacao.firstPoint.x}"/>
+
+                <h:panelGrid columns="2" columnClasses="occurrenceDlgL, occurrenceDlgR">
+
+                    <h:outputLabel for="nome" value="Nome:" />
+                    <h:panelGrid columns="1">
+                        <p:message for="nome"/> 
+                        <p:inputTextarea id="nome" value="#{pontosInteressesBean.pontosInteresse.nome}" required="true" requiredMessage="Campo obrigatório"
+                                         maxlength="255" autoResize="false"/>
+                    </h:panelGrid>
+
+                    <h:outputLabel for="categoria" value="Categoria: " />
+                    <h:panelGrid columns="1">
+                        <p:message for="categoria"/>
+                        <p:inputTextarea id="categoria" value="#{pontosInteressesBean.pontosInteresse.categoria}" required="true" requiredMessage="Campo obrigatório"
+                                         maxlength="255" autoResize="false" />
+                    </h:panelGrid>
+
+                </h:panelGrid>
+
+                <p:commandButton value="Add" style="margin: 5px 15px 10px 80px;" actionListener="#{pontosInteressesBean.validate}"
+                                 title="Registrar este ponto." id="btnAdd" update="formDlgOccurrence"
+                                 oncomplete="handleComplete(xhr, status, args);"/>
+
+                <p:remoteCommand name="remoteCommandReverse" actionListener="#{pontosInteressesBean.addPontoInteresse}" update=":formMap"
+                                 onsuccess="dialog.hide();"/>
+
+                <p:commandButton value="Cancela" oncomplete="return cancel()" immediate="true" actionListener="#{pontosInteressesBean.clearFields()}" style="margin: 5px 0 10px 80px;"
+                                 title="Cancelar registro do ponto." id="btnCancel"/>
+            </h:form>
+        </p:dialog>
+    </shiro:authenticated>
+
+
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/utils.js">
+
+    </script>
+    <shiro:authenticated>
+        <h:form id="form">  
+            <p:growl id="growl" showDetail="true" globalOnly="true" life="6000"/>
+            <p:dataTable id="cars" var="rota" value="#{rotaBean.rotasLista}" paginator="true" rows="5">  
+                <p:column headerText="Rotas" style="width:24%">  
+                    <h:outputText value="#{rota.nome}" />  
+                </p:column> 
+                <p:column style="width:4%; text-align: center" headerText="Consultar Rota">  
+                    <p:commandButton id="selectButton" update=":form:display" oncomplete="rotaDialog.show()" icon="ui-icon-search" title="View">  
+                        <f:setPropertyActionListener value="#{rota}" target="#{rotaBean.selectedRota}" />  
+                    </p:commandButton>  
+                </p:column>
+                <p:column style="width:4%; text-align: center" headerText="Excluir Rota">  
+                    <p:commandButton id="selectButton2" update=":form:display" oncomplete="confirmation.show()" icon="ui-icon-close" title="View">  
+                        <f:setPropertyActionListener value="#{rota}" target="#{rotaBean.selectedRota}" />  
+                    </p:commandButton>  
+                </p:column>
+            </p:dataTable>         
+            <p:dialog header="Detalhes da Rota" widgetVar="rotaDialog" resizable="false" id="carDlg"  
+                      showEffect="fade" hideEffect="explode" modal="true">  
+                <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+                    <h:outputText value="Rota:" />  
+                    <h:outputText value="#{rotaBean.selectedRota.nome}" style="font-weight:bold"/>  
+                    <p:commandButton id="selectButton" update=":formMap" actionListener="#{rotaBean.preencherMapa()}" value="Ver no mapa" title="Preencher Mapa" ajax="false;" />  
+                </h:panelGrid>  
+            </p:dialog>  
+            <p:confirmDialog id="confirmDialog" message="Deseja excluir essa rota?"  
+                             header="Excluir Rota" severity="alert" widgetVar="confirmation">  
+
+                <p:commandButton id="confirm" value="Sim" update="carDlg" oncomplete="confirmation.hide()"  
+                                 actionListener="#{rotaBean.excluirRota()}" ajax="false"/>  
+                <p:commandButton id="decline" value="Não" onclick="confirmation.hide()" type="button" />   
+
+            </p:confirmDialog>  
+        </h:form>
+    </shiro:authenticated>
+</div>

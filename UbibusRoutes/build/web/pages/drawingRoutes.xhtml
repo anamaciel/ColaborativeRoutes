@@ -1,0 +1,103 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:shiro="http://shiro.apache.org/tags">
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery-1.8.2.js"></script> 
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>     
+    <script type="text/javascript">
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+        var map;
+
+        function initialize() {
+            directionsDisplay = new google.maps.DirectionsRenderer();
+            var chicago = new google.maps.LatLng(41.850033, -87.6500523);
+            var mapOptions = {
+                zoom: 6,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: chicago
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            directionsDisplay.setMap(map);
+        }
+
+        function calcRoute() {
+            var start = document.getElementById('start').value;
+            var end = document.getElementById('end').value;
+            var i=0;
+            var waypts = [];
+            var checkboxArray = $("#waypoints option:selected").val();
+        
+            $("#waypoints option").each(function (){
+                if (this.selected==true) {
+                    waypts.push({
+                            location:this.value,
+                            stopover:true});
+                } 
+            })
+
+            var request = {
+                origin: start,
+                destination: end,
+                waypoints: waypts,
+                optimizeWaypoints: true,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                    var route = response.routes[0];
+                    var summaryPanel = document.getElementById('directions_panel');
+                    summaryPanel.innerHTML = '';
+                    // For each route, display summary information.
+                    for (var i in route.legs){
+                        var routeSegment = i + 1;
+                        summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment + '</b><br />';
+                        summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+                        summaryPanel.innerHTML += route.legs[i].end_address + '<br />';
+                        summaryPanel.innerHTML += route.legs[i].distance.text + '<br /><br />';
+                    }
+                }
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+    <div id="map-canvas" style="float:left;width:70%;height:100%;"></div>
+    <div id="control_panel" style="float:right;width:30%;text-align:left;padding-top:20px">
+        <div style="margin:20px;border-width:2px;">
+            
+            <b>Start:</b>
+            <select id="start">
+                <option value="Halifax, NS">Halifax, NS</option>
+                <option value="Boston, MA">Boston, MA</option>
+                <option value="New York, NY">New York, NY</option>
+                <option value="Miami, FL">Miami, FL</option>
+            </select>
+            <b>Waypoints:</b>
+            <i>(Ctrl-Click for multiple selection)</i> 
+            <select multiple="multiple" id="waypoints">
+                <option value="montreal, quebec">Montreal, QBC</option>
+                <option value="toronto, ont">Toronto, ONT</option>
+                <option value="chicago, il">Chicago</option>
+                <option value="winnipeg, mb">Winnipeg</option>
+                <option value="fargo, nd">Fargo</option>
+                <option value="calgary, ab">Calgary</option>
+                <option value="spokane, wa">Spokane</option>
+            </select>
+            <b>End:</b>
+            <select id="end">
+                <option value="Vancouver, BC">Vancouver, BC</option>
+                <option value="Seattle, WA">Seattle, WA</option>
+                <option value="San Francisco, CA">San Francisco, CA</option>
+                <option value="Los Angeles, CA">Los Angeles, CA</option>
+            </select>
+            <input type="submit" onclick="calcRoute();" />
+        </div>
+        <div id="directions_panel" style="margin:20px;background-color:#FFEE77;"></div>
+    </div>
+</div>

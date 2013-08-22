@@ -1,0 +1,34 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:shiro="http://shiro.apache.org/tags">
+
+    <h:form id="formMap">
+        <p:growl id="messages" showDetail="true" life="2000" />  
+
+        <p:gmap id="gmap" center="-7.16798126869324, -34.8314046409435" zoom="13" type="HYBRID" style="width:750px;height:500px"   
+                model="#{mapBean.mapModel}" widgetVar="map" streetView="true" fitBounds="false">     
+<!--            <p:ajax event="pointSelect" listener="#{mapBean.onPointSelect}" update="messages" />  -->
+            <p:ajax event="overlaySelect" listener="#{mapBean.onMarkerSelect}" />  
+             <p:gmapInfoWindow>
+                <p:outputPanel styleClass="panel_infoWin">                    
+                    <p:dataTable value="#{mapBean.linhas}" var="linha" emptyMessage="Nenhuma linha encontrada!">
+                        <f:facet name="header"><h:outputText value="Linhas que passam nessa parada!"/></f:facet>
+                        <p:column headerText="Número">
+                            <h:outputText value="#{linha.numero}"/>
+                        </p:column>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{linha.nome}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:gmapInfoWindow>
+           
+        </p:gmap>
+    </h:form>
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/utils.js">
+
+    </script>
+</div>

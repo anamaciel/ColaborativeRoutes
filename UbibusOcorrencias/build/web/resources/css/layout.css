@@ -1,0 +1,114 @@
+* {
+    padding: 0;
+    margin: 0;
+} 
+body {
+    padding: 0;
+    font-size: 12px;
+    color: #616161;
+    font-family: Verdana, "Verdana CE", Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+}
+#wrapper{
+    width: 960px;
+    margin: 0 auto;
+}
+#top {
+    width: 960px;
+    height: 70px;
+    margin: 3px 0;
+}
+.top {
+    padding: 5px 5px 0 5px;
+}
+#left {
+    float: left;
+    width: 200px;
+    top: 0;
+    min-height: 500px;
+    margin-bottom: 10px;
+}
+#leftLogin {
+    height: 100%;
+    margin: 0;
+}
+#leftMenu {
+    clear:both;
+    margin-top: 15px;
+}
+#content {
+    float: left;
+    position: relative;
+    left: 5px;
+    top: 0 !important;
+    min-height: 500px;
+    width: 755px;
+    padding-bottom: 10px;
+}
+#footer {
+    height: 50px;
+    clear: both;
+    text-align: left;
+    color: #666;
+    font-size: 11px;
+    width: 960px;
+}
+.footer{padding: 0 20px;}
+#bottom {
+    height: 100%;
+    margin: 0;
+    background-color: #c2dfef;
+    clear: both;
+}
+#mapForm {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 800px;
+}
+#logo{
+    float: left;
+    height: 60px;
+}
+#panel_top{
+    position: relative;
+    height: 29px;
+    width: 950px;
+    border-bottom: 1px solid #AFAFAF;
+}
+#panel_search {
+    position: absolute;
+    width: 950px;
+    height: 30px;
+}
+
+#formSearch{
+    width: 660px;
+    height: 30px;
+    margin: 3px 0 0 300px;
+    position: relative;
+    top: 0px;
+    right: 0px;
+}
+#letreiro{
+    width: 605px;
+    height: 29px;
+    position: absolute;
+}
+#logged{
+    width: 340px;
+    height: 29px;
+    float: right;
+    position: relative;
+    top: 0px;
+    right: 0px;
+}
+
+#top h1 {
+    font-size:  18px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    padding: 2px 0 2px 5px;
+    width: 455px;
+    height: 25px;
+    margin-left: 150px;
+}

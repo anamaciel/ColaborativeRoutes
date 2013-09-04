@@ -1,0 +1,115 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:shiro="http://shiro.apache.org/tags">
+
+    <h:form id="formMap" prependId="false">
+        <p:growl id="messages" showDetail="true" globalOnly="true" life="6000"/>
+
+        <p:gmap id="gmap" center="#{ocorrenciaBean.defaultLocation}" zoom="#{ocorrenciaBean.zoom}" type="HYBRID" style="width:750px;height:500px" model="#{ocorrenciaBean.mapModel}"   
+                widgetVar="map" streetView="true" onPointClick="handlePointClick(event);" fitBounds="false">
+     
+            <p:ajax event="overlaySelect" listener="#{ocorrenciaBean.onMarkerSelect}" />
+
+            <p:gmapInfoWindow>
+                <p:outputPanel styleClass="panel_infoWin" rendered="#{not ocorrenciaBean.markerOnly}">
+                    <h:panelGrid columns="2" columnClasses="infoWinL, infoWinR">
+                        <h:outputText value="Tipo: " />
+                        <h:outputText value="#{ocorrenciaBean.ocorrenciaSelecionada.tipoOcorrencia.toString()}" />
+
+                        <h:outputText value="Descrição: " />
+                        <h:outputText value="#{ocorrenciaBean.ocorrenciaSelecionada.descricao}"/>
+
+                        <h:outputText value="Data e Horário: " rendered="false"/>
+                        <h:outputText value="#{ocorrenciaBean.ocorrenciaSelecionada.dataHora}" rendered="false">
+                            <f:convertDateTime pattern="EEE, dd MMM, yyyy - hh:mm:ss" locale="#{preferencesBean.locale}"/>
+                        </h:outputText>
+
+                        <h:outputText value="Duração estimada: " />
+                        <h:outputText value="#{ocorrenciaBean.ocorrenciaSelecionada.duracaoEstimada}" />
+
+                        <h:outputText value="Referência: " />
+                        <h:outputText value="#{ocorrenciaBean.ocorrenciaSelecionada.referencia}" />
+
+                        <h:outputText value="Referência 2: " />
+                        <h:outputText value="#{ocorrenciaBean.ocorrenciaSelecionada.referencia2}" />
+
+                    </h:panelGrid>
+                    <br/>
+<!--                    <h:outputText value="#{ocorrenciaBean.linhasAfetadas}" />-->
+                    <p:dataTable value="#{ocorrenciaBean.linhasAfetadas}" var="linha" emptyMessage="Nenhuma linha afetada!">
+                        <f:facet name="header"><h:outputText value="Linhas Afetadas"/></f:facet>
+                        <p:column headerText="Número">
+                            <h:outputText value="#{linha.numero}"/>
+                        </p:column>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{linha.nome}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+                <h:outputText value="#{ocorrenciaBean.searchMarker.title}" rendered="#{ocorrenciaBean.markerOnly}"/>
+            </p:gmapInfoWindow>
+
+        </p:gmap>
+    </h:form>
+
+    <shiro:authenticated>
+        <p:dialog widgetVar="dialog" closable="false" position="center" showEffect="fade" hideEffect="explode" id="dlgOccurrence" modal="true"
+                  width="400" draggable="false" resizable="false" header="Registro de Ocorrência">
+            <h:form prependId="false" id="formDlgOccurrence">
+                <!--                guarda a localizacao selecionada -->
+                <h:inputHidden id="latitude" value="#{ocorrenciaBean.ocorrencia.localizacao.firstPoint.y}"/>
+                <h:inputHidden id="longitude" value="#{ocorrenciaBean.ocorrencia.localizacao.firstPoint.x}"/>
+
+                <h:panelGrid columns="2" columnClasses="occurrenceDlgL, occurrenceDlgR">
+                    <h:outputLabel for="tipoOcorrencia" value="Tipo:" />
+                    <h:panelGrid columns="2">                            
+                        <p:selectOneMenu id="tipoOcorrencia" required="true" requiredMessage="Informe o tipo da ocorrência."
+                                         value="#{ocorrenciaBean.ocorrencia.tipoOcorrencia}"
+                                         converter="#{tipoOcorrenciaBean.tipoOcorrenciaConverter}">
+                            <f:selectItem itemLabel="" itemValue="#{ocorrenciaBean.ocorrencia.tipoOcorrencia}"/>
+                            <f:selectItems var="tipoOcorrencia" itemValue="#{tipoOcorrencia}" itemLabel="#{tipoOcorrencia}" value="#{tipoOcorrenciaBean.tipoOcorrenciaList}"/>
+                        </p:selectOneMenu>                            
+                        <p:message for="tipoOcorrencia"/>
+                    </h:panelGrid>
+
+                    <h:outputLabel for="descricao" value="Descrição:" />
+                    <h:panelGrid columns="1">
+                        <p:message for="descricao"/> 
+                        <p:inputTextarea id="descricao" value="#{ocorrenciaBean.ocorrencia.descricao}" required="true" requiredMessage="Campo obrigatório"
+                                         maxlength="255" autoResize="false"/>
+                    </h:panelGrid>
+
+                    <h:outputLabel for="referencia" value="Referência:" />
+                    <h:panelGrid columns="1">
+                        <p:message for="referencia"/>
+                        <p:inputTextarea id="referencia" value="#{ocorrenciaBean.ocorrencia.referencia}" required="true" requiredMessage="Campo obrigatório"
+                                         maxlength="255" autoResize="false" />
+                    </h:panelGrid>
+
+                    <h:outputLabel for="referencia2" value="Referência 2" />
+                    <h:panelGrid columns="1">
+                        <p:message for="referencia2"/>
+                        <p:inputTextarea id="referencia2" value="#{ocorrenciaBean.ocorrencia.referencia2}" required="true" requiredMessage="Campo obrigatório"
+                                         maxlength="255" autoResize="false"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+
+                <p:commandButton value="Add" style="margin: 5px 15px 10px 80px;" actionListener="#{ocorrenciaBean.addOcorrencia}"
+                                 title="Registrar esta ocorrência." id="btnAdd" update="formDlgOccurrence"
+                                 oncomplete="handleComplete(xhr, status, args);"/>
+                
+                <p:remoteCommand name="remoteCommandReverse" actionListener="#{ocorrenciaBean.validate}" update=":formMap"
+                                 onsuccess="dialog.hide();"/>
+
+                <p:commandButton value="Cancela" oncomplete="return cancel()" immediate="true" actionListener="#{ocorrenciaBean.clearFields()}" style="margin: 5px 0 10px 80px;"
+                                 title="Cancelar registro da ocorrência." id="btnCancel"/>
+            </h:form>
+        </p:dialog>
+    </shiro:authenticated>
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/utils.js">
+
+    </script>
+</div>

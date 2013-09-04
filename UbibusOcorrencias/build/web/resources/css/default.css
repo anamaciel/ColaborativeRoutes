@@ -1,0 +1,26 @@
+.ui-widget {
+/*    font-size: 75%;*/
+    font-size: 98% !important;
+}
+
+img { border: none; }
+
+#footer a {
+    color: #666;
+    font-weight: 600;
+}
+
+.required{
+    color: red;
+}
+
+.upper {
+    text-transform: uppercase;
+}
+
+a{ text-decoration: none;}
+a:hover{ text-decoration: underline;}
+a img {	border: none;}
+
+#leftLogin #loginPanel #loginPanel_content{padding: 0;}
+#top #logged #logged_content{padding: 0;}

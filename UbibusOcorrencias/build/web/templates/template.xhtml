@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+
+            <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+            <link rel="shortcut icon" href="./resources/images/favicon.png"/>
+            <link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/default.css" />
+            <link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/layout.css" />
+            <link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/style.css" />
+            
+            <title><ui:insert name="title">UBIBUS Ocorrências</ui:insert></title>
+            <ui:insert name="head"></ui:insert>
+
+        </h:head>
+
+        <h:body>
+
+            <div id="wrapper">
+                <ui:insert name="status"></ui:insert>
+                <div id="top" class="ui-widget ui-widget-header ui-corner-all">
+                    <ui:insert name="top">Top</ui:insert>
+                </div>
+                <div id="left" class="ui-widget-content ui-corner-all ui-helper-clearfix">
+                    <ui:insert name="left">Left</ui:insert>
+                </div>
+
+                <div id="content" class="ui-widget">
+                    <div class="content">
+                        <ui:insert name="content">Content</ui:insert>
+                    </div>
+                    <!--                    <div style="clear: both;">&nbsp;</div>-->
+                    <div id="bottom">
+                        <ui:insert name="bottom"></ui:insert>
+                    </div>
+                </div>
+
+                <div id="footer" class="ui-widget ui-widget-header ui-corner-all">
+                    <div class="footer">
+                        &copy; #{preferencesBean.year} <span style="float: right;">Designed by <a href="mailto:marvas1987@gmail.com">Marcelo F. Vasconcelos</a></span>
+                    </div>
+                </div>
+            </div>
+
+        </h:body>
+
+    </f:view>
+</html>

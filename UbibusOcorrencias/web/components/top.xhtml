@@ -1,0 +1,68 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:shiro="http://shiro.apache.org/tags"
+     class="top">
+
+    <p:growl id="searchMsg" life="6000" globalOnly="true"/>
+
+    <div style="float: left;margin-right: 20px;z-index: 20;position:relative;">
+        <a href="http://maps.google.com.br" title="Google Maps">
+            <div id="logo"></div>
+        </a>
+    </div>
+    <div id="panel_top">
+        <div id="letreiro">
+            <h1>UBIBUS Ocorrências</h1>
+        </div>
+
+        <div id="logged">
+            <shiro:authenticated>
+                <h:form id="formLogged" prependId="false">
+                    <p id="groupLogged">
+                        <span>#{userName}</span>
+                        <p:commandLink styleClass="ui-icon ui-icon-triangle-1-s" style="float: right;" id="dynaButton"/>
+                    </p>
+                    <p:menu overlay="true" trigger="dynaButton" my="right top" at="right bottom" style="width: 180px;">
+                        <p:menuitem value="Configurações da Conta" action="#{pageManager.setAlterarConfiguracao()}" ajax="false"
+                                    actionListener="#{usuarioBean.alterarConfiguracao()}" icon="ui-icon ui-icon-pencil"/>
+                        <p:menuitem value="Sair" actionListener="#{authenticatorBean.logout()}" update="@all" icon="ui-icon ui-icon-power"/>
+                    </p:menu>
+
+                </h:form>
+            </shiro:authenticated>
+        </div>
+    </div>
+
+    <div id="panel_search">
+        <h:form prependId="false" rendered="#{pageManager.pageMap}" id="formSearch">
+            <p:inputText id="address" value="#{ocorrenciaBean.address}" title="Pesquisar um local no mapa" size="60"/>
+            <p:commandButton id="searchButton" value="Buscar" title="Buscar no mapa" onclick="geocoder()" image="ui-icon-search"/>
+            <p:remoteCommand name="remoteCommandGeocoder" actionListener="#{ocorrenciaBean.setLocation}" update=":formMap"/>            
+
+        </h:form>
+        <script type="text/javascript">
+            function geocoder() {
+                var geocoder = new google.maps.Geocoder();
+                var address = document.getElementById("address").value;
+                geocoder.geocode({
+                    'address' : address
+                }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        remoteCommandGeocoder([ {
+                                name : 'latitude',
+                                value : results[0].geometry.location.lat()
+                            }, {
+                                name : 'longitude',
+                                value : results[0].geometry.location.lng()
+                            }, {
+                                name : 'formattedAddress',
+                                value : results[0].formatted_address
+                            }]);
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>

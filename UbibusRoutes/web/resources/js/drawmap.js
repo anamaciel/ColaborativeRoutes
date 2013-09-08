@@ -3,6 +3,7 @@ var directionsService = new google.maps.DirectionsService();
 var startLocation = null;
 var endLocation = null;
 var map;
+var latlngSelecionada;
 var infowindow = new google.maps.InfoWindow(
         {
             size: new google.maps.Size(0, 0)
@@ -46,10 +47,14 @@ function RenderCustomDirections(response, status) {
         // For each route, display summary information.
         for (var i = 0; i < route.legs.length; i++) {
             var routeSegment = i + 1;
+            //alert(route.legs[i].start_address);
+            //alert(route.legs[i].end_address);
             summaryPanel.innerHTML += "<b>Route Segment: " + routeSegment + "</b><br />";
-            summaryPanel.innerHTML += route.legs[i].start_address + " to ";
+            summaryPanel.innerHTML += "Latitude: " + route.legs[i].start_location + "FIM:" + route.legs[i].end_location + "<br />";
+            summaryPanel.innerHTML += route.legs[i].start_address + " PARA ";
             summaryPanel.innerHTML += route.legs[i].end_address + "<br />";
             summaryPanel.innerHTML += route.legs[i].distance.text + "<br /><br />";
+            document.getElementById('localizacao').value+=route.legs[i].start_location + "/" + route.legs[i].end_location + "a";
         }
         var legs = response.routes[0].legs;
         for (i = 0; i < legs.length; i++) {
@@ -57,6 +62,7 @@ function RenderCustomDirections(response, status) {
                 startLocation.latlng = legs[i].start_location;
                 startLocation.address = legs[i].start_address;
                 startLocation.marker = createMarker(legs[i].start_location, "start", legs[i].start_address, "red");
+                //alert(startLocation.latlng);
 
             } else {
                 waypts[i] = new Object();
@@ -65,12 +71,13 @@ function RenderCustomDirections(response, status) {
                 waypts[i].marker = createMarker(legs[i].start_location, "waypoint" + i, legs[i].start_address, "red");
 
             }
+            //alert("fim: " + endLocation.latlng);
             endLocation.latlng = legs[i].end_location;
             endLocation.address = legs[i].end_address;
             var steps = legs[i].steps;
             for (j = 0; j < steps.length; j++) {
                 var nextSegment = steps[j].path;
-
+                //alert('nextSegment' + nextSegment);
                 for (k = 0; k < nextSegment.length; k++) {
                     polyline.getPath().push(nextSegment[k]);
                     bounds.extend(nextSegment[k]);
@@ -87,49 +94,49 @@ function RenderCustomDirections(response, status) {
     //alert(status);
 }
 function RenderCustomDirectionsLinha(response, status) {
-    alert('entrei 1');
+    //alert('entrei 1');
     //if (status == google.maps.DirectionsStatus.OK) {
-        alert('entrei');
-        waypts = [];
-        var bounds = new google.maps.LatLngBounds();
-        var route = response.routes[0];
-        startLocation = new Object();
-        endLocation = new Object();
+    alert('entrei');
+    waypts = [];
+    var bounds = new google.maps.LatLngBounds();
+    var route = response.routes[0];
+    startLocation = new Object();
+    endLocation = new Object();
 
-        var legs = response.routes[0].legs;
-        for (i = 0; i < legs.length; i++) {
-            if (i == 0) {
-                startLocation.latlng = legs[i].start_location;
-                startLocation.address = legs[i].start_address;
-                startLocation.marker = createMarker(legs[i].start_location, "start", legs[i].start_address, "red");
+    var legs = response.routes[0].legs;
+    for (i = 0; i < legs.length; i++) {
+        if (i == 0) {
+            startLocation.latlng = legs[i].start_location;
+            startLocation.address = legs[i].start_address;
+            startLocation.marker = createMarker(legs[i].start_location, "start", legs[i].start_address, "red");
 
-            } else {
-                waypts[i] = new Object();
-                waypts[i].latlng = legs[i].start_location;
-                waypts[i].address = legs[i].start_address;
-                waypts[i].marker = createMarker(legs[i].start_location, "waypoint" + i, legs[i].start_address, "red");
+        } else {
+            waypts[i] = new Object();
+            waypts[i].latlng = legs[i].start_location;
+            waypts[i].address = legs[i].start_address;
+            waypts[i].marker = createMarker(legs[i].start_location, "waypoint" + i, legs[i].start_address, "red");
 
-            }
-            endLocation.latlng = legs[i].end_location;
-            endLocation.address = legs[i].end_address;
-            var steps = legs[i].steps;
-            for (j = 0; j < steps.length; j++) {
-                var nextSegment = steps[j].path;
+        }
+        endLocation.latlng = legs[i].end_location;
+        endLocation.address = legs[i].end_address;
+        var steps = legs[i].steps;
+        for (j = 0; j < steps.length; j++) {
+            var nextSegment = steps[j].path;
 
-                for (k = 0; k < nextSegment.length; k++) {
-                    polylineLinha.getPath().push(nextSegment[k]);
-                    bounds.extend(nextSegment[k]);
-                }
+            for (k = 0; k < nextSegment.length; k++) {
+                polylineLinha.getPath().push(nextSegment[k]);
+                bounds.extend(nextSegment[k]);
             }
         }
-        polylineLinha.setMap(map);
+    }
+    polylineLinha.setMap(map);
 
-        map.fitBounds(bounds);
-        endLocation.marker = createMarker(endLocation.latlng, "end", endLocation.address, "red");
+    map.fitBounds(bounds);
+    endLocation.marker = createMarker(endLocation.latlng, "end", endLocation.address, "red");
 
     //}
     //else
-        //alert(status);
+    //alert(status);
 }
 
 
@@ -223,41 +230,43 @@ function desenhaRotaLinha() {
     var start = document.getElementById('startLinha').value;
     //alert('sera q tah aqui?');
     //alert('start'+ start);
-    var latInicio = start.substring(start.indexOf("(")+1,start.indexOf(" "));
-    var lngInicio = start.substring(start.indexOf(" ")+1, start.indexOf(")"));
+    var latInicio = start.substring(start.indexOf("(") + 1, start.indexOf(" "));
+    var lngInicio = start.substring(start.indexOf(" ") + 1, start.indexOf(")"));
     //alert("Lat Inicio: " + latInicio);
     //alert("Lng Inicio: " + lngInicio);
+    var meioStart = document.getElementById('meioStartLinha').value;
+    var latMeioStart = meioStart.substring(meioStart.indexOf("(") + 1, meioStart.indexOf(" "));
+    var lngMeioStart = meioStart.substring(meioStart.indexOf(" ") + 1, meioStart.indexOf(")"));
+    //alert("Lat meio Start: " + latMeioStart);
+    //alert("Lng meio Start: " + lngMeioStart);
+
+    var meioEnd = document.getElementById('meioEndLinha').value;
+    var latMeioEnd = meioEnd.substring(meioEnd.indexOf("(") + 1, meioEnd.indexOf(" "));
+    var lngMeioEnd = meioEnd.substring(meioEnd.indexOf(" ") + 1, meioEnd.indexOf(")"));
+    //alert("Lat meio FIM: " + latMeioEnd);
+    //alert("Lng meio Fim: " + lngMeioEnd);
+
     var end = document.getElementById('endLinha').value;
-    var latFim = end.substring(end.indexOf("(")+1,end.indexOf(" "));
-    var lngFim = end.substring(end.indexOf(" ")+1, end.indexOf(")"));
-    //alert("Lat Fim: " + latFim);
+    var latFim = end.substring(end.indexOf("(") + 1, end.indexOf(" "));
+    var lngFim = end.substring(end.indexOf(" ") + 1, end.indexOf(")"));
+    //alert("Lat FIM: " + latFim);
     //alert("Lng Fim: " + lngFim);
-    var waypts = [];
-    var checkboxArray = $("#waypointsLinha option:selected").val();
-
-    $("#waypointsLinha option").each(function() {
-        if (this.selected == true) {
-            //alert(this.value);
-            var latMeio = this.value.substring(this.value.indexOf("(")+1,this.value.indexOf(" "));
-            var lngMeio = this.value.substring(this.value.indexOf(" ")+1, this.value.indexOf(")"));
-            //alert("Lat Meio: " + latMeio);
-            //alert("Lng Meio: " + lngMeio);
-            waypts.push({
-                location: new google.maps.LatLng(latMeio, lngMeio),
-                stopover: true});
-        }
-    })
-
-    var request = {
-        origin: new google.maps.LatLng(latInicio, lngInicio),
-        destination: new google.maps.LatLng(latFim, lngFim),
-        waypoints: waypts,
-        optimizeWaypoints: true,
-        travelMode: google.maps.TravelMode.DRIVING
-    };
 
 
-    directionsService.route(request, RenderCustomDirectionsLinha);
+    var flightPlanCoordinates = [
+        new google.maps.LatLng(lngInicio, latInicio),
+        new google.maps.LatLng(lngMeioStart, latMeioStart),
+        new google.maps.LatLng(lngMeioEnd, latMeioEnd),
+        new google.maps.LatLng(lngFim, latFim)
+    ];
+    var flightPath = new google.maps.Polyline({
+        path: flightPlanCoordinates,
+        strokeColor: '#00FF00',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+    });
+
+    flightPath.setMap(map);
 
 }
 
@@ -287,6 +296,7 @@ function createMarker(latlng, label, html, color) {
             data: "latlng=" + latlng,
             success: function(result) {
                 //alert(result);
+                latlngSelecionada = latlng;
                 infowindow.setContent(result);
                 infowindow.open(map, marker);
             }
@@ -321,25 +331,46 @@ function hideElement(parada) {
     $.ajax({
         type: "GET",
         url: "SugerirParadasUsuarios",
-        data: "parada=" + parada,
+        data: {parada: parada, pontos: document.getElementById("localizacao").value, latlngPI: ""+latlngSelecionada},
         success: function(retorno) {
             $('#myModal').html(retorno);
+            alert(latlngSelecionada);
             //alert("teste");
         }
     })
 }
 
-function desenhaLinha(linha){
+function teste(parada){
+    var element = 'localizacao' + parada;
+    var title = 'titulo' + parada;
+    var parada = document.getElementById(element).value;
+    var titulo = document.getElementById(title).value;
+    //alert(parada);
+    var lat = parada.substring(parada.indexOf("(") + 1, parada.indexOf(" "));
+    var lng = parada.substring(parada.indexOf(" ") + 1, parada.indexOf(")"));
+    
+    //alert(lat);
+    //alert(lng);
+    
+    var myLatlng = new google.maps.LatLng(lng,lat);
+    var marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map,
+      title: titulo
+  });
+}
+
+function desenhaLinha(linha) {
     //alert(linha);
     $.ajax({
         type: "GET",
         url: "DesenharLinhas",
         data: "id_linha=" + linha,
         success: function(retorno) {
-            alert('retorno desenhar linhas');
+            //alert('retorno desenhar linhas');
             $('#myModal').html(retorno);
             desenhaRotaLinha();
-           //alert(retorno);
+            //alert(retorno);
         }
-    })
+    });
 }

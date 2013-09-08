@@ -5,6 +5,7 @@
 package br.com.ubibus.model.facade;
 
 import br.com.ubibus.model.pojo.Linha;
+import br.com.ubibus.model.pojo.LinhasParadas;
 import br.com.ubibus.model.pojo.Parada;
 import java.util.List;
 import javax.annotation.security.PermitAll;
@@ -13,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.postgis.PGgeometry;
-import org.postgis.Point;
 
 /**
  *
@@ -58,6 +58,14 @@ public class ParadaFacade extends AbstractFacade<Parada> {
         return query.getResultList();
     }
     
+    
+    @PermitAll
+    public LinhasParadas findLinhasParadasOrdem(Integer id_parada, Integer id_linha) {
+        String jpql = "SELECT lt FROM LinhasParadas lt WHERE lt.parada.id = :id_parada AND lt.linha.id = :id_linha";
+        Query query = em.createQuery(jpql).setParameter("id_parada", id_parada).setParameter("id_linha", id_linha);
+
+        return (LinhasParadas)query.getSingleResult();
+    }
     
     @PermitAll
     public List<Linha> findLinhasParadas(Integer id_parada) {

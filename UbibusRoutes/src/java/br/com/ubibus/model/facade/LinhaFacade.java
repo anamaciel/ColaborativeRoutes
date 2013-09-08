@@ -1,5 +1,6 @@
 package br.com.ubibus.model.facade;
 
+import br.com.ubibus.model.pojo.Carro;
 import br.com.ubibus.model.pojo.Linha;
 import br.com.ubibus.model.pojo.Parada;
 import br.com.ubibus.model.pojo.Trecho;
@@ -64,6 +65,15 @@ public class LinhaFacade extends AbstractFacade<Linha> {
         String jpql = "SELECT l FROM Linha l, IN(l.linhasParadasList) lp WHERE lp.parada.id = :parada";
         Query query = em.createQuery(jpql)
                 .setParameter("parada", parada);
+
+        return query.getResultList();
+    }
+    
+    @PermitAll
+    public List<Carro> findCarrosByLinha(Integer linha) {
+        String jpql = "SELECT c FROM Carro c, IN(c.linhasCarrosList) cl WHERE cl.linha.id = :linha";
+        Query query = em.createQuery(jpql)
+                .setParameter("linha", linha);
 
         return query.getResultList();
     }

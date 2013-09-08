@@ -91,11 +91,13 @@ public class DesenharLinhas extends HttpServlet {
         out.println("<body>");
         out.println("<form id=\"dados\">");
         out.println("<input type=\"hidden\" id=\"startLinha\" value=\"" + paradasLinha.get(0).getLocalizacao() + "\" />");
-        out.println("<select multiple=\"multiple\" id=\"waypointsLinha\" >");
-        for (int i = 1; i < 10; i++) {
-            out.println("<option value=\"" + paradasLinha.get(i).getLocalizacao() + "\" selected>" + paradasLinha.get(i).getNome() + "</option>");
-        }
-        out.println("</select>");
+//        out.println("<select multiple=\"multiple\" id=\"waypointsLinha\" >");
+//        for (int i = 1; i < 10; i++) {
+//            out.println("<option value=\"" + paradasLinha.get(i).getLocalizacao() + "\" selected>" + paradasLinha.get(i).getNome() + "</option>");
+//        }
+//        out.println("</select>");
+        out.println("<input type=\"hidden\" id=\"meioStartLinha\" value=\"" + paradasLinha.get(paradasLinha.size()/2).getLocalizacao() + "\" />");
+        out.println("<input type=\"hidden\" id=\"meioEndLinha\" value=\"" + paradasLinha.get(paradasLinha.size()/2 + 1).getLocalizacao() + "\" />");
         out.println("<input type=\"hidden\" id=\"endLinha\" value=\"" + paradasLinha.get(paradasLinha.size() - 1).getLocalizacao() + "\" />");
         out.println("</form>");
         out.println("</body>");

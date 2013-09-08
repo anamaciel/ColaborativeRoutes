@@ -10,6 +10,7 @@ import br.com.ubibus.model.pojo.Parada;
 import br.com.ubibus.model.pojo.PontosInteresse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.postgis.Geometry;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
-import org.primefaces.model.map.LatLng;
 
 /**
  *
@@ -35,6 +35,24 @@ public class PontosInteresseProximos extends HttpServlet {
     private ParadaFacade paradaFacade;
     private List<PontosInteresse> listaPontosInteresse;
     private List<Parada> paradasProximas;
+
+    public double distancia(double latitudeInicial, double longitudeInicial, double latitudeFinal, double longitudeFinal) {
+        double d = 0;
+        int raioTerra = 6371;
+        double PI = Math.PI;
+        int valorMetade = 90;
+        int valorInteiro = 180;
+
+        double v1 = Math.cos(PI * (valorMetade - latitudeFinal) / 180);
+        double v2 = Math.cos((valorMetade - latitudeInicial) * PI / 180);
+        double v3 = Math.sin((valorMetade - latitudeFinal) * PI / 180);
+        double v4 = Math.sin((valorMetade - latitudeInicial) * PI / 180);
+        double v5 = Math.cos((longitudeInicial - longitudeFinal) * PI / 180);
+
+        double result = raioTerra * Math.acos((v1 * v2) + (v3 * v4 * v5));
+
+        return d = result;
+    }
 
     /**
      * Processes requests for both HTTP
@@ -79,6 +97,7 @@ public class PontosInteresseProximos extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         PrintWriter out = response.getWriter();
         String latlng = request.getParameter("latlng");
 //        Double lat = Double.parseDouble(latlng.substring(4, 18));
@@ -102,17 +121,25 @@ public class PontosInteresseProximos extends HttpServlet {
         out.println("<body>");
         out.println("<div class = \"MarkerPopUp\" style=\"width: 300px; height: 200px; overflow-x:hidden; margin-left: 80px;\">");
         out.println("<table cellpadding='2' id=\"hiddenEl\" border='1' style=\"overflow-x:hidden;\">");
-        out.println("<tr><th colspan='2'>Paradas Proximas</th></tr>");
+        out.println("<tr><th colspan='3'>Paradas Proximas</th></tr>");
         out.println("<tr>");
         out.println("<th>Nome</th>");
         out.println("<th>Descrição</th>");
+        out.println("<th>Distância ao PI</th>");
         out.println("</tr>");
+        DecimalFormat df = new DecimalFormat("#,###.00");  
         for (Parada parada : paradasProximas) {
-            out.println("<tr>");
-            out.println("<td><a href=\"#\" onclick=\"hideElement(" + parada.getId()+ ")\" class=\"big-link\" data-reveal-id=\"myModal\">" + parada.getNome()+ "</a></td>");
-            out.println("<td>" + parada.getDescricao()+ "</td>");
+            out.println("<tr onMouseOver=teste(" + parada.getId() + ")>");
+            out.println("<input type=\"hidden\" id=\"localizacao" + parada.getId() + "\" value=\"" + parada.getLocalizacao() + "\" />");
+            out.println("<input type=\"hidden\" id=\"titulo" + parada.getId() + "\" value=\"" + parada.getDescricao() + "\" />");
+            out.println("<td><a href=\"#\" onclick=\"hideElement(" + parada.getId() + ")\" class=\"big-link\" data-reveal-id=\"myModal\">" + parada.getNome() + "</a></td>");
+            out.println("<td>" + parada.getDescricao() + "</td>"); 
+            out.println("<td>" +  df.format(paradaFacade.findDistanciaParadaPI(new PGgeometry(teste), new PGgeometry(parada.getLocalizacao()))) + "m </td>");
             out.println("</tr>");
+            //System.out.println("distancia: " + paradaFacade.findDistanciaParadaPI(new PGgeometry(teste), new PGgeometry(parada.getLocalizacao())));
         }
+
+
         out.println("</table>");
         out.println("</div>");
         //div para popup
@@ -120,8 +147,8 @@ public class PontosInteresseProximos extends HttpServlet {
         //out.println("<h1>Reveal Modal Goodness</h1>");
         out.println("<a class=\"close-reveal-modal\">&#215;</a>");
         out.println("</div>");
-			
-		
+
+
         out.println("</body>");
         out.println("</html>");
         //out.println(request.getParameter("latlng"));

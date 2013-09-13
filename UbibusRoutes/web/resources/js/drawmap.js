@@ -334,7 +334,7 @@ function hideElement(parada) {
         data: {parada: parada, pontos: document.getElementById("localizacao").value, latlngPI: ""+latlngSelecionada},
         success: function(retorno) {
             $('#myModal').html(retorno);
-            alert(latlngSelecionada);
+            //alert(latlngSelecionada);
             //alert("teste");
         }
     })

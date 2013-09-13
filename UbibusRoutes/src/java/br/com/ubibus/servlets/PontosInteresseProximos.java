@@ -36,24 +36,6 @@ public class PontosInteresseProximos extends HttpServlet {
     private List<PontosInteresse> listaPontosInteresse;
     private List<Parada> paradasProximas;
 
-    public double distancia(double latitudeInicial, double longitudeInicial, double latitudeFinal, double longitudeFinal) {
-        double d = 0;
-        int raioTerra = 6371;
-        double PI = Math.PI;
-        int valorMetade = 90;
-        int valorInteiro = 180;
-
-        double v1 = Math.cos(PI * (valorMetade - latitudeFinal) / 180);
-        double v2 = Math.cos((valorMetade - latitudeInicial) * PI / 180);
-        double v3 = Math.sin((valorMetade - latitudeFinal) * PI / 180);
-        double v4 = Math.sin((valorMetade - latitudeInicial) * PI / 180);
-        double v5 = Math.cos((longitudeInicial - longitudeFinal) * PI / 180);
-
-        double result = raioTerra * Math.acos((v1 * v2) + (v3 * v4 * v5));
-
-        return d = result;
-    }
-
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and

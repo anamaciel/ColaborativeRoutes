@@ -29,6 +29,8 @@ public class Linha implements Serializable {
     @NotNull
     @Column(name = "empresa")
     private String empresa;
+    @Column(name = "preco")
+    private Double preco;
     @Column(name = "comprimento_linha")
     private Float compLinha;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "linha")
@@ -89,6 +91,14 @@ public class Linha implements Serializable {
         this.compLinha = compLinha;
     }
 
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
+    
     @XmlTransient
     public List<LinhasParadas> getLinhasParadasList() {
         return linhasParadasList;

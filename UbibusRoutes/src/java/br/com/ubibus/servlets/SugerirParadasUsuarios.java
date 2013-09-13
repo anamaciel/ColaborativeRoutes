@@ -14,6 +14,7 @@ import br.com.ubibus.model.pojo.Parada;
 import br.com.ubibus.model.pojo.PontosInteresse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -123,6 +124,7 @@ public class SugerirParadasUsuarios extends HttpServlet {
         out.println("<th>Acessibilidade</th>");
         out.println("<th>Troca?</th>");
         out.println("</tr>");
+        DecimalFormat df = new DecimalFormat("#,###.00");  
         for (Linha linha : linhas) {
             List<Parada> paradasLinha = paradaFacade.findParadasLinhas(linha.getId());
             int cont = 0;
@@ -143,12 +145,15 @@ public class SugerirParadasUsuarios extends HttpServlet {
             System.out.println("MENOR distanciaPiParada: "+menorDistancia);
 
             out.println("<tr>");
-            out.println("<td onMouseOver=desenhaLinha(" + linha.getId() + ")>" + linha.getNome() + "</td>");
-            out.println("<td>" + linha.getEmpresa() + "</td>");
+            //out.println("<td onMouseOver=desenhaLinha(" + linha.getId() + ")>" + linha.getNome() + "</td>");
+            out.println("<td>" + linha.getNome() + "</td>");
+            out.println("<td>" + "R$ " + linha.getPreco() + "</td>");
             carros = linhaFacade.findCarrosByLinha(linha.getId());
             out.println("<td>");
             for (Carro carro : carros) {
-                out.println(carro.getPlaca() + "-" + carro.isAcessibilidade() + "\n");
+                if(carro.isAcessibilidade()){
+                    out.println(carro.getPlaca());
+                }
             }
             out.println("</td>");
             if(menorDistancia <=1000){
